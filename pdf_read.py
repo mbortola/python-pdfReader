@@ -1,3 +1,7 @@
+import base64
+
+import binascii
+
 __author__ = 'michele'
 
 from pdfrw import PdfReader
@@ -6,9 +10,8 @@ from pyasn1.codec.ber import encoder, decoder
 import array
 
 if __name__ == "__main__":
-    reader = PdfReader('/home/michele/Downloads/Signature-P-B-LT-2.pdf')
-
-    keys = reader.keys()
+    #reader = PdfReader('/home/yyi9343/projects/python/personal/python-pdfReader/Signature-P-B-LT-2.pdf')
+    reader = PdfReader('/home/yyi9343/projects/python/personal/python-pdfReader/Documento_firmato.pdf')
     dss = reader.Root.DSS
 
     # PDFArray
@@ -17,14 +20,10 @@ if __name__ == "__main__":
     certs=dss.Certs
 
     for cert in certs:
-        # ascii decode
-        byte_stream = array.array('B', cert.stream)
-        # hex encode
-        byte_strem_2 = [elem.encode('hex') for elem in cert.stream]
+        byte_stream = [elem.encode('hex') for elem in cert.stream]
 
-    print keys
-
-    decoder.decode(b'\x02\x01\x0c', asn1Spec=univ.Integer())
+    encoded = base64.b64encode(''.join([binascii.unhexlify(e) for e in byte_stream]))
+    print encoded
     ## asn1 test
 
     substrate = encoder.encode(univ.Boolean(True))
